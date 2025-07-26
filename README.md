@@ -1,6 +1,6 @@
 # Tableflow Project
 
-This project contains Terraform scripts to provision and configure resources for a data pipeline using AWS and Confluent Cloud. The pipeline integrates Kafka topics, IAM roles, S3 storage, and Confluent Tableflow for managing data streams and schemas. **This project is designed for demonstration purposes and supports integration with AWS Glue or Snowflake for downstream data processing.**
+This project contains Terraform scripts to provision and configure resources for a data pipeline using AWS and Confluent Cloud. The pipeline integrates Kafka topics, IAM roles, S3 storage, and Confluent Tableflow for managing data streams and schemas. **This project is designed for demonstration purposes and supports integration with Snowflake for downstream data processing.**
 
 ## Overview
 
@@ -23,15 +23,16 @@ Before using these scripts, ensure you have:
 
 ## Required Variables
 
-You need to define the following variables in a `variables.tf` file or provide them via environment variables or a `.tfvars` file:
+You need to define the following variables in a `variables.tf` file or provide them via environment variables or a `.tfvars` file. Refer to the sample-tfvars.txt for how to configure them. 
+Please note that you can only configure 1 catalog per confluent cluster. 
 
 - **Confluent Variables**:
   - `confluent_cloud_api_key`: Your Confluent Cloud API Key
   - `confluent_cloud_api_secret`: Your Confluent Cloud API Key
   - `environment_display_name`: What you want the name of your environment to be
 
-- **Snowflake Variables (Optional)**:
-Only used if running snowflake open data catalog.
+- **Snowflake Variables**:
+Please make a note of the following from your Snowflake open data catalog (Polaris), and configure them in a 
   - `polaris_client_id`: Client ID for Snowflake Open Data Account
   - `polaris_client_secret`: Secret key for Snowflake Open Data Account
   - `snowflake_endpoint`: Endpoint for Tableflow to write to Snowflake Open Data Catalog

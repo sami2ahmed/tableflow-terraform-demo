@@ -6,6 +6,15 @@ environment_display_name = "my-environment"
 # ignore if not using Snowflake
 polaris_client_id = "ABC123" 
 polaris_client_secret = "ABC123="
-snowflake_endpoint = "https://my-endpoint.us-east-1.snowflakecomputing.com"
+snowflake_endpoint = "https://my-endpoint.snowflakecomputing.com"
 snowflake_warehouse = "polaris"
 snowflake_allowed_scope = "PRINCIPAL_ROLE:polarisuserrole"
+
+# note snowflake endpoint is in the form: 
+Organization Name: ADCYUTE
+Separator: -
+Account Name: BOB
+e.g.
+https://ADCYUTE-BOB.snowflakecomputing.com
+
+# please take care in configuring your snowflake_allowed_scope as well. More details: https://docs.confluent.io/cloud/current/topics/tableflow/how-to-guides/catalog-integration/integrate-with-snowflake-open-catalog-or-apache-polaris.html#configure-snowflake-open-catalog-integration 
