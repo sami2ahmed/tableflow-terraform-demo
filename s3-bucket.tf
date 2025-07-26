@@ -4,10 +4,10 @@ resource "random_integer" "bucket_suffix" {
 }
 
 resource "aws_s3_bucket" "my_bucket" {
-    bucket = "cflt-tflow-${random_integer.bucket_suffix.result}"
+    bucket = "tableflow-bucket-sami"
 
     tags = {
-        Name = "cflt-tflow-${random_integer.bucket_suffix.result}"
+        Name = "tableflow-bucket-sami"
     }
     force_destroy = true
 }

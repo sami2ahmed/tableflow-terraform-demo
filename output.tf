@@ -18,3 +18,8 @@ output "s3_bucket_name" {
   value       = aws_s3_bucket.my_bucket.bucket
   description = "The name of the S3 bucket"
 }
+
+output "polaris_s3_config" {
+  value       = "s3://${aws_s3_bucket.my_bucket.bucket}"
+  description = "S3 bucket path for Polaris catalog configuration"
+}

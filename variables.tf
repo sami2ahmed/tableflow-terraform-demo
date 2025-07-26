@@ -27,13 +27,13 @@ variable snowflake_allowed_scope {
 variable "aws_region" {
   description = "AWS region"
   type        = string
-  default = "us-east-1"
+  default = "ap-southeast-1"
 }
 
 variable "catalog_type" {
-  description = "The type of catalog integration to use (glue or snowflake)"
+  description = "The type of catalog integration to use (snowflake)"
   type        = string
-  default = "glue"
+  default = "snowflake"
 }
 
 variable "polaris_client_id" {
