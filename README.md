@@ -32,7 +32,8 @@ Please note that you can only configure 1 catalog per confluent cluster.
   - `environment_display_name`: What you want the name of your environment to be
 
 - **Snowflake Variables**:
-Please make a note of the following from your Snowflake open data catalog (Polaris), and configure them in a 
+Please make a note of the following from your Snowflake open data catalog (Polaris). **Whatever is the name of the Default Base Location of your S3 bucket in Polaris must match the name of your s3 bucket in the `s3-bucket.tf` file**
+
   - `polaris_client_id`: Client ID for Snowflake Open Data Account
   - `polaris_client_secret`: Secret key for Snowflake Open Data Account
   - `snowflake_endpoint`: Endpoint for Tableflow to write to Snowflake Open Data Catalog
