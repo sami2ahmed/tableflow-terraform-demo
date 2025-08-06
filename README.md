@@ -116,18 +116,18 @@ my-tableflow-role-4220
 8. change the AWS ARN line to the `storage_aws_iam_user_arn` you copied in step 4 e.g. 
 ```json
 {
-			"Sid": "",
-			"Effect": "Allow",
-			"Principal": {
-				"AWS": "arn:aws:iam::996704095571:user/pdq31222-s"
-			},
-			"Action": "sts:AssumeRole",
-			"Condition": {
-				"StringEquals": {
-					"sts:ExternalId": "snowflake-xyz"
-				}
-			}
-		}
+   "Sid": "",
+   "Effect": "Allow",
+   "Principal": {
+      "AWS": "arn:aws:iam::996704095571:user/pdq31222-s"
+   },
+   "Action": "sts:AssumeRole",
+   "Condition": {
+      "StringEquals": {
+         "sts:ExternalId": "snowflake-xyz"
+      }
+   }
+}
 ```
 9. save the trust policy
 
