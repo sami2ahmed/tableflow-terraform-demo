@@ -79,9 +79,9 @@ CREATE OR REPLACE EXTERNAL VOLUME iceberg_external_volume
          (
             NAME = 'my-iceberg-external-volume'
             STORAGE_PROVIDER = 'S3'
-            STORAGE_BASE_URL = 's3://tableflow-bucket-samiahmed'
-            STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::829250932323:role/tableflow-role-3225'
-            STORAGE_AWS_EXTERNAL_ID = 'snowflake-external-samiahmed'
+            STORAGE_BASE_URL = 's3://my-bucket'
+            STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::829250932323:role/my-tableflow-role-4220'
+            STORAGE_AWS_EXTERNAL_ID = 'my-snowflake-extid'
          )
       );
 ```
@@ -91,7 +91,7 @@ DESC EXTERNAL VOLUME iceberg_external_volume;
 SELECT SYSTEM$VERIFY_EXTERNAL_VOLUME('iceberg_external_volume');
 ```
 4. Copy down the storage ARN e.g. `STORAGE_AWS_IAM_USER_ARN: arn:aws:iam::996704095571:user/pdq31222-s`
-5. Go back to AWS UI and find the role created by terraform i.e. `tableflow-role-3225` in AWS (find it from your terraform output `"s3_access_role_arn"`)
+5. Go back to AWS UI and find the role created by terraform i.e. `my-tableflow-role-4220` in AWS (find it from your terraform output `"s3_access_role_arn"`)
 6. Hit edit trust policy and add new statement 
 7. copy the json block above the new statement you just created and paste e.g. 
 		{
