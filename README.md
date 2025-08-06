@@ -11,9 +11,6 @@ The Terraform scripts in this project perform the following tasks:
 - Provision a Confluent Tableflow topic (`stock_trades`) with Iceberg table format.
 - Manage API keys for Kafka and Tableflow access.
 
-## Architecture
-![](tableflow-demo.drawio.png)
-
 ## Prerequisites
 
 Before using these scripts, ensure you have:
@@ -48,13 +45,83 @@ Please make a note of the following from your Snowflake open data catalog (Polar
 4. Run `terraform plan` to preview the changes.
 5. Run `terraform apply` to provision the resources.
 
+## Post deployment (terraform apply) steps
+After running `terraform apply` you will need to edit your trust policy of the storage_aws_role created by terraform so that you can run Snowflake queries against it. 
+
 ## Outputs
 
-After deployment, the following outputs will be available:
+After deployment, the following outputs will be available from std out:
 - `kafka_api_key`: The Kafka API key.
 - `kafka_api_secret`: The Kafka API secret (sensitive).
 - `s3_access_role_arn`: The ARN of the S3 access role.
 - `s3_bucket_name`: The name of the S3 bucket.
+
+1. After `terraform apply`, take a look at the Terraform `Outputs` printed to std out. You can grab the `your_polaris_s3_config` and `your_s3_access_role_arn` from the Output to insert into step #2. You get the `snowflake-external-id` from you Polaris catalog in the `external ID` field.
+2. Go to your snowflake, create a SQL Worksheet, and run: 
+```sql
+CREATE OR REPLACE EXTERNAL VOLUME iceberg_external_volume
+   STORAGE_LOCATIONS =
+      (
+         (
+            NAME = 'my-iceberg-external-volume'
+            STORAGE_PROVIDER = 'S3'
+            STORAGE_BASE_URL = '<your_polaris_s3_config>'
+            STORAGE_AWS_ROLE_ARN = '<your_s3_access_role_arn>'
+            STORAGE_AWS_EXTERNAL_ID = '<snowflake-external-id-from-polaris>'
+         )
+      );
+ ```
+Example: 
+```sql
+CREATE OR REPLACE EXTERNAL VOLUME iceberg_external_volume
+   STORAGE_LOCATIONS =
+      (
+         (
+            NAME = 'my-iceberg-external-volume'
+            STORAGE_PROVIDER = 'S3'
+            STORAGE_BASE_URL = 's3://tableflow-bucket-samiahmed'
+            STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::829250932323:role/tableflow-role-3225'
+            STORAGE_AWS_EXTERNAL_ID = 'snowflake-external-samiahmed'
+         )
+      );
+```
+3. Then in snowflake run:
+```sql
+DESC EXTERNAL VOLUME iceberg_external_volume;
+SELECT SYSTEM$VERIFY_EXTERNAL_VOLUME('iceberg_external_volume');
+```
+4. Copy down the storage ARN e.g. `STORAGE_AWS_IAM_USER_ARN: arn:aws:iam::996704095571:user/pdq31222-s`
+5. Go back to AWS UI and find the role created by terraform i.e. `tableflow-role-3225` in AWS (find it from your terraform output `"s3_access_role_arn"`)
+6. Hit edit trust policy and add new statement 
+7. copy the json block above the new statement you just created and paste e.g. 
+		{
+			"Sid": "",
+			"Effect": "Allow",
+			"Principal": {
+				"AWS": "arn:aws:iam::996704095571:user/abc41000-s"
+			}
+			"Action": "sts:AssumeRole",
+			"Condition": {
+				"StringEquals": {
+					"sts:ExternalId": "snowflake-xyz"
+				}
+			}
+		}
+8. change the AWS ARN line to the `storage_aws_iam_user_arn` you copied in step 4 e.g. 
+{
+			"Sid": "",
+			"Effect": "Allow",
+			"Principal": {
+				"AWS": "arn:aws:iam::996704095571:user/pdq31222-s"
+			},
+			"Action": "sts:AssumeRole",
+			"Condition": {
+				"StringEquals": {
+					"sts:ExternalId": "snowflake-xyz"
+				}
+			}
+		}
+9. save the trust policy
 
 ## Notes
 

@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "name": "CustomerRelation",
+  "fields": [
+    {
+      "name": "customer_number",
+      "type": "string"
+    },
+    {
+      "name": "relation",
+      "type": "string"
+    },
+    {
+      "name": "acct_number",
+      "type": "string"
+    }
+  ]
+}

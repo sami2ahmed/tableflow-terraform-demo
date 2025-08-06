@@ -1,0 +1,50 @@
+{
+  "type": "record",
+  "name": "CustomerInfo",
+  "fields": [
+    {
+      "name": "customer_number",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "options": [
+            "123456789",
+            "123456790",
+            "123456791",
+            "123456792",
+            "123456793",
+            "123456794",
+            "123456795",
+            "123456796",
+            "123456797",
+            "123456798",
+            "123456799",
+            "123456800"
+          ]
+        }
+      }
+    },
+    {
+      "name": "customer_name",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "options": [
+            "Gayle Fisher",
+            "Napoleon Keith",
+            "Carmella Schaefer",
+            "Ronald Duncan",
+            "Francis Stout",
+            "Scottie Knox",
+            "Rosa Delgado",
+            "Ana Larson",
+            "Willian Best",
+            "John Smith",
+            "Jane Doe",
+            "Michael Johnson"
+          ]
+        }
+      }
+    }
+  ]
+}

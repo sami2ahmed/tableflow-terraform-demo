@@ -1,0 +1,61 @@
+{
+  "type": "record",
+  "name": "CustomerAddress",
+  "fields": [
+    {
+      "name": "customer_number",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "options": [
+            "123456789",
+            "123456790",
+            "123456791",
+            "123456792",
+            "123456793",
+            "123456794",
+            "123456795",
+            "123456796",
+            "123456797",
+            "123456798",
+            "123456799",
+            "123456800"
+          ]
+        }
+      }
+    },
+    {
+      "name": "street",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "options": [
+            "80 Fitzroy Street",
+            "89 Insignia Way",
+            "21 Yarra Street",
+            "26 Kintyre Street",
+            "84 Bapaume Road",
+            "2 Carlisle Street",
+            "6 Masthead Drive",
+            "93 Baker Street",
+            "1 Tapleys Hill Road",
+            "45 Collins Street",
+            "67 Queen Street",
+            "12 Elizabeth Street"
+          ]
+        }
+      }
+    },
+    {
+      "name": "country",
+      "type": {
+        "type": "string",
+        "arg.properties": {
+          "options": [
+            "Australia"
+          ]
+        }
+      }
+    }
+  ]
+}
