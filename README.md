@@ -84,58 +84,55 @@ CREATE OR REPLACE EXTERNAL VOLUME iceberg_external_volume
             STORAGE_AWS_EXTERNAL_ID = 'my-snowflake-extid'
          )
       );
-```
-3. Then in snowflake run:
-```sql
-DESC EXTERNAL VOLUME iceberg_external_volume;
-SELECT SYSTEM$VERIFY_EXTERNAL_VOLUME('iceberg_external_volume');
-```
-4. Copy down the storage ARN e.g. ```sql 
-STORAGE_AWS_IAM_USER_ARN: arn:aws:iam::996704095571:user/pdq31222-s
-```
-5. Go back to AWS UI and find the role created by terraform i.e. ```sql 
-my-tableflow-role-4220
-```
-(You can find the above from your terraform output `s3_access_role_arn`)
-6. Hit edit trust policy and add new statement 
-```json
-{
-   "Sid": "",
-   "Effect": "Allow",
-   "Principal": {
-      "AWS": "arn:aws:iam::996704095571:user/abc41000-s"
-   },
-   "Action": "sts:AssumeRole",
-   "Condition": {
-      "StringEquals": {
+3. Then in Snowflake, run:
+   ```sql
+   DESC EXTERNAL VOLUME iceberg_external_volume;
+   SELECT SYSTEM$VERIFY_EXTERNAL_VOLUME('iceberg_external_volume');
+   ```
+
+4. Copy down the storage ARN, for example:
+   ```
+   STORAGE_AWS_IAM_USER_ARN: arn:aws:iam::996704095571:user/pdq31222-s
+   ```
+
+5. Go back to the AWS Console and find the role created by Terraform, for example:
+   ```
+   my-tableflow-role-4220
+   ```
+   (You can find this from your Terraform output `s3_access_role_arn`.)
+
+6. Edit the trust policy and add a new statement:
+   ```json
+   {
+     "Sid": "",
+     "Effect": "Allow",
+     "Principal": {
+       "AWS": "arn:aws:iam::996704095571:user/abc41000-s"
+     },
+     "Action": "sts:AssumeRole",
+     "Condition": {
+       "StringEquals": {
          "sts:ExternalId": "snowflake-xyz"
-      }
+       }
+     }
    }
-}
-```
-8. change the AWS ARN line to the `storage_aws_iam_user_arn` you copied in step 4 e.g. 
-```json
-{
-   "Sid": "",
-   "Effect": "Allow",
-   "Principal": {
-      "AWS": "arn:aws:iam::996704095571:user/pdq31222-s"
-   },
-   "Action": "sts:AssumeRole",
-   "Condition": {
-      "StringEquals": {
+   ```
+
+7. Change the `AWS` ARN line to the `STORAGE_AWS_IAM_USER_ARN` you copied in step 4. For example:
+   ```json
+   {
+     "Sid": "",
+     "Effect": "Allow",
+     "Principal": {
+       "AWS": "arn:aws:iam::996704095571:user/pdq31222-s"
+     },
+     "Action": "sts:AssumeRole",
+     "Condition": {
+       "StringEquals": {
          "sts:ExternalId": "snowflake-xyz"
-      }
+       }
+     }
    }
-}
-```
-9. save the trust policy
+   ```
 
-## Notes
-
-- Ensure that your AWS and Confluent credentials are properly configured before running the scripts.
-- The `prevent_destroy` lifecycle rule is set to `false` for API keys to allow re-creation if needed.
-- Review the `depends_on` blocks to understand resource dependencies and avoid circular dependencies.
-- This project supports integration with AWS Glue or Snowflake for downstream data processing.
-
-For more details, refer to the individual `.tf` files in the project.
+8. Save the trust policy.
