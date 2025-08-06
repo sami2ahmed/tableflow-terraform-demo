@@ -5,10 +5,10 @@ This project contains Terraform scripts to provision and configure resources for
 ## Overview
 
 The Terraform scripts in this project perform the following tasks:
-- Create Kafka topics (`stock_trades` and `users`) in Confluent Cloud.
-- Configure a Datagen Source Connector to generate sample data for the `stock_trades` and `users` topics.
+- Create Kafka topics in Confluent Cloud.
+- Configures multiple Datagen Source Connector to generate sample data for each of the topics.
 - Set up an S3 bucket and IAM roles/policies for BYOB (Bring Your Own Bucket) integration with Confluent Tableflow.
-- Provision a Confluent Tableflow topic (`stock_trades`) with Iceberg table format.
+- Provision Confluent Tableflow topics to surface that data in Iceberg table format in Snowflake.
 - Manage API keys for Kafka and Tableflow access.
 
 ## Prerequisites
@@ -90,24 +90,31 @@ CREATE OR REPLACE EXTERNAL VOLUME iceberg_external_volume
 DESC EXTERNAL VOLUME iceberg_external_volume;
 SELECT SYSTEM$VERIFY_EXTERNAL_VOLUME('iceberg_external_volume');
 ```
-4. Copy down the storage ARN e.g. `STORAGE_AWS_IAM_USER_ARN: arn:aws:iam::996704095571:user/pdq31222-s`
-5. Go back to AWS UI and find the role created by terraform i.e. `my-tableflow-role-4220` in AWS (find it from your terraform output `"s3_access_role_arn"`)
+4. Copy down the storage ARN e.g. ```sql 
+STORAGE_AWS_IAM_USER_ARN: arn:aws:iam::996704095571:user/pdq31222-s
+```
+5. Go back to AWS UI and find the role created by terraform i.e. ```sql 
+my-tableflow-role-4220
+```
+(You can find the above from your terraform output `s3_access_role_arn`)
 6. Hit edit trust policy and add new statement 
-7. copy the json block above the new statement you just created and paste e.g. 
-		{
-			"Sid": "",
-			"Effect": "Allow",
-			"Principal": {
-				"AWS": "arn:aws:iam::996704095571:user/abc41000-s"
-			}
-			"Action": "sts:AssumeRole",
-			"Condition": {
-				"StringEquals": {
-					"sts:ExternalId": "snowflake-xyz"
-				}
-			}
-		}
+```json
+{
+   "Sid": "",
+   "Effect": "Allow",
+   "Principal": {
+      "AWS": "arn:aws:iam::996704095571:user/abc41000-s"
+   },
+   "Action": "sts:AssumeRole",
+   "Condition": {
+      "StringEquals": {
+         "sts:ExternalId": "snowflake-xyz"
+      }
+   }
+}
+```
 8. change the AWS ARN line to the `storage_aws_iam_user_arn` you copied in step 4 e.g. 
+```json
 {
 			"Sid": "",
 			"Effect": "Allow",
@@ -121,6 +128,7 @@ SELECT SYSTEM$VERIFY_EXTERNAL_VOLUME('iceberg_external_volume');
 				}
 			}
 		}
+```
 9. save the trust policy
 
 ## Notes
